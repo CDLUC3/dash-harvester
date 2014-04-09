@@ -114,7 +114,8 @@ def checkLogin(url):
   """ Attempt to fetch a file, and if we get a Merritt login page instead,
       try to log in. """
   global urlOpener
-  url += "?blue=true"
+#  this line is used to bypass DUAs
+#  url += "?blue=true"
   
 # build opener
   opener = urllib2.build_opener( urllib2.HTTPCookieProcessor() )
@@ -185,6 +186,8 @@ if __name__ == '__main__':
       newFileName= p.group(1) if p else fileName
       idsafe = re.sub(r':','%3a',id)
       idsafe = re.sub(r'/','%2f',idsafe)
+# The way to determine the DOI may change depending on EZID "alias" (formerly known as 
+# a "shadow ARK"
       doi = re.sub(r'ark:/b','doi:10.',id)
 	  
       if not os.path.exists(dstPath):
