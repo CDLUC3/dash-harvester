@@ -142,7 +142,7 @@ if __name__ == '__main__':
   
   # Check that we got a URL on the command line
   if len(sys.argv) != 3 or "http" not in sys.argv[1]:
-    sys.stderr.write("Usage: parseFeed15.py merrittFeedURL campus(abbr)\n")
+    sys.stderr.write("Usage: " + __file__ + " merrittFeedURL campus(abbr)\n")
     sys.exit(1)
 
   # We need cookie handling, so make an opener to do that
