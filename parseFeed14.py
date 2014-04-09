@@ -103,7 +103,7 @@ def idToPath(baseDir, id):
   transId = transId.replace("/", "=").replace(":", "+").replace(".", ",")
 
   # Pair up the characters to form a pairpath
-  outPath = pjoin(baseDir, "erc")
+  outPath = pjoin(baseDir, campusName)
   outPath = pjoin(outPath, transId)
 
 # Done.
@@ -142,7 +142,7 @@ if __name__ == '__main__':
   
   # Check that we got a URL on the command line
   if len(sys.argv) != 3 or "http" not in sys.argv[1]:
-    sys.stderr.write("Usage: parseFeed13.py merrittFeedURL merrittCollectionName\n")
+    sys.stderr.write("Usage: parseFeed15.py merrittFeedURL campus(abbr)\n")
     sys.exit(1)
 
   # We need cookie handling, so make an opener to do that
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 
   # Find the collection identifier
   url = sys.argv[1]
-  collName = sys.argv[2]
+  campusName = sys.argv[2]
   
   m = re.search("(http(s?)://[^/]+).*collection=([^&;]+)", url)
   assert m, "Cannot find collection identifier in feed URL"
