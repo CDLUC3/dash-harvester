@@ -9,9 +9,9 @@ from __future__ import unicode_literals, print_function, absolute_import, divisi
 # System modules
 import cookielib, codecs, filecmp, hashlib, os, re, shutil, sys, time, \
        urllib, urllib2, urlparse, xml
-
 import subprocess
-
+from datetime import datetime
+from xml.dom import minidom
 from os.path import join as pjoin
 from xml.etree import ElementTree as etree
 from decimal import *
@@ -197,9 +197,17 @@ if __name__ == '__main__':
 
       try:
         target = pjoin(dstPath, newFileName)
-
+        xmldoc=minidom.parse(stream)
+      
+      except Exception, e:
+        print ("%s: %s is NOT well-formed! %s" % (str(datetime.now()),dstPath, e))
+	
+      else:
+        target = pjoin(dstPath, newFileName)
+        print("target: %s" % target)
         with open(target, "w") as f:
-          shutil.copyfileobj(stream, f)
+		  f.write(xmldoc.toxml("utf-8"))
+#   		  shutil.copyfileobj(stream, f)
 
         # Also write a file recording the target link. This is temporary until
         # the ATOM feed includes the link for us.
@@ -216,7 +224,8 @@ if __name__ == '__main__':
         ObjectSize=pjoin(dstPath, "objectSize")
         with open(ObjectSize, "w") as f:
 		  f.write("%s" % objectSize)
-		  
+
       finally:
 		stream.close()
+		
 
