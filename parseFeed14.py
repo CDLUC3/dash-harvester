@@ -115,7 +115,6 @@ def checkLogin(url):
       try to log in. """
   global urlOpener
 #  this line is used to bypass DUAs
-#  url += "?blue=true"
   
 # build opener
   opener = urllib2.build_opener( urllib2.HTTPCookieProcessor() )
@@ -124,7 +123,7 @@ def checkLogin(url):
   try:
  	_file = opener.open(url)
   except IOError, e:
-    print ("We failed to open %s" % url)
+    print ("%s: We failed to open %s" % (str(datetime.now()),url))
     if hasattr(e, 'code'):
         print ("We failed with error code - %s." % e.code)
     if hasattr(e, 'reason'):
