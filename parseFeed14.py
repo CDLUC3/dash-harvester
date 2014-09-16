@@ -122,7 +122,8 @@ def checkLogin(url):
 # get file  
   try:
  	_file = opener.open(url)
-  except IOError, e:
+  except Exception, e:
+#  except IOError, e:
     print ("%s: We failed to open %s" % (str(datetime.now()),url))
     if hasattr(e, 'code'):
         print ("%s: We failed with error code - %s." % (str(datetime.now()),e.code))
@@ -201,8 +202,11 @@ if __name__ == '__main__':
       if not os.path.exists(dstPath):
         os.makedirs(dstPath)
 
-      stream=checkLogin(url)
-
+      try:
+        stream=checkLogin(url)
+      except:
+		sys.exit(1)
+		
       try:
         target = pjoin(dstPath, newFileName)
         xmldoc=minidom.parse(stream)
