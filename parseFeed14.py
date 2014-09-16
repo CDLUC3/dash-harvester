@@ -125,9 +125,9 @@ def checkLogin(url):
   except IOError, e:
     print ("%s: We failed to open %s" % (str(datetime.now()),url))
     if hasattr(e, 'code'):
-        print ("We failed with error code - %s." % e.code)
+        print ("%s: We failed with error code - %s." % (str(datetime.now()),e.code))
     if hasattr(e, 'reason'):
-        print ("The error object has the following reason :", e.reason)
+        print ("%s: The error object has the following reason :" % (str(datetime.now()),e.reason))
 	sys.exit(1)
   else:
 	return _file
@@ -169,10 +169,19 @@ if __name__ == '__main__':
     # Grab the feed
     print("Feed:  %s" % url)
     req = urllib2.Request(url)
-    stream = urlOpener.open(req)
+
+    try:
+       stream = urlOpener.open(req)
+    except Exception, e:
+        print ("%s: Open error: %s" % (str(datetime.now()), e))
+        sys.exit(1)
+
     try:
      # And process it.
       url = processFeed(url, stream.read())
+    except Exception, e:
+        print ("%s: Read error: %s" % (str(datetime.now()), e))
+        sys.exit(1)
     finally:
       stream.close()
 
