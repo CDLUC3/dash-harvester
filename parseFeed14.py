@@ -115,7 +115,9 @@ def checkLogin(url):
       try to log in. """
   global urlOpener
 #  this line is used to bypass DUAs
-  
+  if campusName=="ucsf":
+	url+="?blue=true"
+
 # build opener
   opener = urllib2.build_opener( urllib2.HTTPCookieProcessor() )
   urllib2.install_opener( opener )
