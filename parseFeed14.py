@@ -199,7 +199,10 @@ if __name__ == '__main__':
       idsafe = re.sub(r'/','%2f',idsafe)
 # The way to determine the DOI may change depending on EZID "alias" (formerly known as 
 # a "shadow ARK"
-      doi = re.sub(r'ark:/b','doi:10.',id)
+      if "ark:/b" in id:
+		doi = re.sub(r'ark:/b','doi:10.',id)
+      if "ark:/c" in id:
+		doi = re.sub(r'ark:/c','doi:10.1',id)
 	  
       if not os.path.exists(dstPath):
         os.makedirs(dstPath)
