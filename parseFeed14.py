@@ -41,7 +41,8 @@ def processFeed(feedURL, feedText):
     id = idElement[0].text if len(idElement) else None
     id = re.sub("^http(s?)://[^/]+/", "", id) # Just retain the id part
     objSize = entry.findall("./dct:extent", ns)[0].text
-    
+    lastMod = entry.findall("./atom:updated",ns)[0].text
+#    lastMod="2015-10-05"
     for link in entry.findall("./atom:link[@rel='http://purl.org/dc/terms/hasPart']", ns):
       href = link.get('href', '')
       m = re.search("\/d\/(.*?)\/(.*?)\/(.*)", href)
@@ -56,7 +57,7 @@ def processFeed(feedURL, feedText):
       else:
 		objectSize="1"
       
-      filesToFetch.append((id, file, objectSize, version, urlparse.urljoin(feedURL, href)))
+      filesToFetch.append((id, file, objectSize, version, lastMod, urlparse.urljoin(feedURL, href)))
 
   nextFeedLink = feedData.findall("./atom:link[@rel='next']", ns)
   return urlparse.urljoin(feedURL, nextFeedLink[0].get('href')) if len(nextFeedLink) else None
@@ -191,7 +192,7 @@ if __name__ == '__main__':
   if len(filesToFetch) > 0:
     # Now fetch all the files
     
-    for (id, fileName, objectSize, versionStr, url) in filesToFetch:
+    for (id, fileName, objectSize, versionStr, lastMod, url) in filesToFetch:
       dstPath = idToPath("data", id)
       p = re.search("producer/(.*)", fileName)
       newFileName= p.group(1) if p else fileName
@@ -201,8 +202,10 @@ if __name__ == '__main__':
 # a "shadow ARK"
       if "ark:/b" in id:
 		doi = re.sub(r'ark:/b','doi:10.',id)
-      if "ark:/c" in id:
+      elif "ark:/c" in id:
 		doi = re.sub(r'ark:/c','doi:10.1',id)
+      else:
+		doi = id
 	  
       if not os.path.exists(dstPath):
         os.makedirs(dstPath)
@@ -241,6 +244,10 @@ if __name__ == '__main__':
         ObjectSize=pjoin(dstPath, "objectSize")
         with open(ObjectSize, "w") as f:
 		  f.write("%s" % objectSize)
+		
+        LastModified=pjoin(dstPath, "lastMod")
+        with open(LastModified, "w") as f:
+		  f.write("%s" % lastMod)
 
       finally:
 		stream.close()
